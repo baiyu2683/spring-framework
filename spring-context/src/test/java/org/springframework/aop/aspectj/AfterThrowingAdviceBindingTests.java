@@ -57,6 +57,7 @@ public class AfterThrowingAdviceBindingTests {
 
 	@Test
 	public void testSimpleAfterThrowing() throws Throwable {
+		this.testBean.exceptional(new Throwable());
 		assertThatExceptionOfType(Throwable.class).isThrownBy(() ->
 				this.testBean.exceptional(new Throwable()));
 		verify(mockCollaborator).noArgs();
