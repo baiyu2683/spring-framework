@@ -1727,20 +1727,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @see #applyBeanPostProcessorsAfterInitialization
 	 */
 	protected Object initializeBean(String beanName, Object bean, @Nullable RootBeanDefinition mbd) {
-<<<<<<< HEAD
-		if (System.getSecurityManager() != null) {
-			AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-				invokeAwareMethods(beanName, bean);
-				return null;
-			}, getAccessControlContext());
-		}
-		else {
-			//调用三个aware接口BeanNameAware、BeanClassLoaderAware、BeanFactoryAware
-			invokeAwareMethods(beanName, bean);
-		}
-=======
+		//调用三个aware接口BeanNameAware、BeanClassLoaderAware、BeanFactoryAware
 		invokeAwareMethods(beanName, bean);
->>>>>>> c58885fc35ce129f56ed9e9d175833dece565e3d
 
 		Object wrappedBean = bean;
 		if (mbd == null || !mbd.isSynthetic()) {
