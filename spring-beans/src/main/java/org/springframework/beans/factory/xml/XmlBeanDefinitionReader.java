@@ -388,6 +388,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
 			throws BeanDefinitionStoreException {
 
 		try {
+			// 将资源文件转换成Document
 			Document doc = doLoadDocument(inputSource, resource);
 			// 解析并注册beanDefinition到工厂
 			int count = registerBeanDefinitions(doc, resource);

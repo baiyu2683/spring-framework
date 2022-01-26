@@ -421,7 +421,8 @@ public class BeanDefinitionParserDelegate {
 			String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
 			aliases.addAll(Arrays.asList(nameArr));
 		}
-
+		// id作为beanname
+		// 如果id为空但是alias不为空，则bean为alias的第一个
 		String beanName = id;
 		if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
 			beanName = aliases.remove(0);
@@ -430,7 +431,7 @@ public class BeanDefinitionParserDelegate {
 						"' as bean name and " + aliases + " as aliases");
 			}
 		}
-
+		// 检查重名，id和alias都不能重复
 		if (containingBean == null) {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
@@ -502,29 +503,35 @@ public class BeanDefinitionParserDelegate {
 			Element ele, String beanName, @Nullable BeanDefinition containingBean) {
 
 		this.parseState.push(new BeanEntry(beanName));
-
+		// 读取class属性
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
+		// 读取parent属性
 		String parent = null;
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
 
 		try {
-			// 实例化一个BeanDefinition
+			// 根据className和parent属性创建一个BeanDefinition(GenericBeanDefinition)实例
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-			// 将属性填充到BeanDefinition中
+			// 硬编码解析所有属性，并将属性填充到BeanDefinition中
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			// 提取descript
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
-			//解析meta、lookup-method、replaced-method标签
+			//解析meta标签
 			parseMetaElements(ele, bd);
+			//解析loopup-method标签， 作用：为一个类的某一个方法提供一个其他类的相同方法名的实现，结果类型:LookupOverride
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			//解析replace-method, 作用：动态的替换一个方法，替换的类必须实现MethodReplacer接口。结果类型：ReplaceOverride
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
 			//解析构造函数constructor-arg标签
 			parseConstructorArgElements(ele, bd);
+			//解析property标签
 			parsePropertyElements(ele, bd);
+			//解析qualifier标签, 当有多个bean,spring注入时为了消除歧义，可以使用qualifier指定一个名称的bean
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());

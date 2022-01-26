@@ -141,25 +141,49 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private volatile Object beanClass;
 
+	/**
+	 * bean的作用范围
+	 */
 	@Nullable
 	private String scope = SCOPE_DEFAULT;
 
+	/**
+	 * 是否抽象
+	 */
 	private boolean abstractFlag = false;
 
+	/**
+	 * 是否延迟加载
+	 */
 	@Nullable
 	private Boolean lazyInit;
 
+	/**
+	 * 自动注入类模式
+	 */
 	private int autowireMode = AUTOWIRE_NO;
 
 	private int dependencyCheck = DEPENDENCY_CHECK_NONE;
 
+	/**
+	 * 表示bean实例化需要另外一个类先实例化
+	 */
 	@Nullable
 	private String[] dependsOn;
 
+	/**
+	 * 是否将当前bean作为其他bean的自动注入候选。
+	 */
 	private boolean autowireCandidate = true;
 
+	/**
+	 * 当自动装配出现多个候选者时，是否将当前bean作为首选
+	 */
 	private boolean primary = false;
 
+	/**
+	 * 记录qualifier
+	 */
 	private final Map<String, AutowireCandidateQualifier> qualifiers = new LinkedHashMap<>();
 
 	@Nullable
@@ -175,17 +199,32 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 	@Nullable
 	private String factoryMethodName;
 
+	/**
+	 * 记录构造函数的参数值
+	 */
 	@Nullable
 	private ConstructorArgumentValues constructorArgumentValues;
 
+	/**
+	 * 记录普通属性的值
+	 */
 	@Nullable
 	private MutablePropertyValues propertyValues;
 
+	/**
+	 * 记录方法重写的持有者，包括lookup-method和replace-method
+	 */
 	private MethodOverrides methodOverrides = new MethodOverrides();
 
+	/**
+	 * 初始化方法
+	 */
 	@Nullable
 	private String initMethodName;
 
+	/**
+	 * 销毁方法
+	 */
 	@Nullable
 	private String destroyMethodName;
 
@@ -197,9 +236,15 @@ public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccess
 
 	private int role = BeanDefinition.ROLE_APPLICATION;
 
+	/**
+	 * 描述信息
+	 */
 	@Nullable
 	private String description;
 
+	/**
+	 * TODO 这个bean定义的资源？？
+	 */
 	@Nullable
 	private Resource resource;
 
