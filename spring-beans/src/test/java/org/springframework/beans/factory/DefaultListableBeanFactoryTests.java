@@ -1,5 +1,5 @@
 /*
- * Copyright 2002-2021 the original author or authors.
+ * Copyright 2002-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,6 @@ import java.io.Closeable;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
-import java.security.AccessControlContext;
-import java.security.AccessController;
-import java.security.Principal;
-import java.security.PrivilegedAction;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -40,9 +36,7 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.annotation.Priority;
-import javax.security.auth.Subject;
-
+import jakarta.annotation.Priority;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.BeansException;
@@ -90,7 +84,6 @@ import org.springframework.core.convert.support.GenericConversionService;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.testfixture.io.SerializationTestUtils;
-import org.springframework.core.testfixture.security.TestPrincipal;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringValueResolver;
 
@@ -433,7 +426,7 @@ class DefaultListableBeanFactoryTests {
 		assertThat(lbf.isTypeMatch("x1", Object.class)).isTrue();
 		assertThat(lbf.isTypeMatch("&x1", Object.class)).isFalse();
 		assertThat(lbf.getType("x1")).isEqualTo(TestBean.class);
-		assertThat(lbf.getType("&x1")).isEqualTo(null);
+		assertThat(lbf.getType("&x1")).isNull();
 		assertThat(TestBeanFactory.initialized).isFalse();
 
 		lbf.registerAlias("x1", "x2");
@@ -2603,27 +2596,11 @@ class DefaultListableBeanFactoryTests {
 	}
 
 	@Test
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	void initSecurityAwarePrototypeBean() {
-		RootBeanDefinition bd = new RootBeanDefinition(TestSecuredBean.class);
-		bd.setScope(BeanDefinition.SCOPE_PROTOTYPE);
-		bd.setInitMethodName("init");
-		lbf.registerBeanDefinition("test", bd);
-		final Subject subject = new Subject();
-		subject.getPrincipals().add(new TestPrincipal("user1"));
-
-		TestSecuredBean bean = (TestSecuredBean) Subject.doAsPrivileged(subject,
-				(PrivilegedAction) () -> lbf.getBean("test"), null);
-		assertThat(bean).isNotNull();
-		assertThat(bean.getUserName()).isEqualTo("user1");
-	}
-
-	@Test
 	void containsBeanReturnsTrueEvenForAbstractBeanDefinition() {
 		lbf.registerBeanDefinition("abs", BeanDefinitionBuilder
 				.rootBeanDefinition(TestBean.class).setAbstract(true).getBeanDefinition());
-		assertThat(lbf.containsBean("abs")).isEqualTo(true);
-		assertThat(lbf.containsBean("bogus")).isEqualTo(false);
+		assertThat(lbf.containsBean("abs")).isTrue();
+		assertThat(lbf.containsBean("bogus")).isFalse();
 	}
 
 	@Test
@@ -3059,37 +3036,6 @@ class DefaultListableBeanFactoryTests {
 
 
 	@SuppressWarnings("unused")
-	private static class TestSecuredBean {
-
-		private String userName;
-
-		void init() {
-			AccessControlContext acc = AccessController.getContext();
-			Subject subject = Subject.getSubject(acc);
-			if (subject == null) {
-				return;
-			}
-			setNameFromPrincipal(subject.getPrincipals());
-		}
-
-		private void setNameFromPrincipal(Set<Principal> principals) {
-			if (principals == null) {
-				return;
-			}
-			for (Iterator<Principal> it = principals.iterator(); it.hasNext();) {
-				Principal p = it.next();
-				this.userName = p.getName();
-				return;
-			}
-		}
-
-		public String getUserName() {
-			return this.userName;
-		}
-	}
-
-
-	@SuppressWarnings("unused")
 	private static class KnowsIfInstantiated {
 
 		private static boolean instantiated;
@@ -3105,7 +3051,6 @@ class DefaultListableBeanFactoryTests {
 		public KnowsIfInstantiated() {
 			instantiated = true;
 		}
-
 	}
 
 
