@@ -9,4 +9,17 @@
 		<constructor-arg value="someNonExistentFile.xml"/>
 	</bean>
 
+	<bean id="bfpp" class="org.springframework.context.support.ObscenityRemovingBeanFactoryPostProcessor">
+		<property name="obscenties">
+			<set>
+				<value>bollocks</value>
+				<value>winky</value>
+			</set>
+		</property>
+	</bean>
+	<bean id="simpleBean" class="org.springframework.context.support.SimplePostProcessor">
+		<property name="connectionString" value="bollocks"/>
+		<property name="password" value="imaginecup"/>
+		<property name="username" value="Microsoft"/>
+	</bean>
 </beans>

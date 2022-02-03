@@ -33,6 +33,7 @@ import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.CannotLoadBeanClassException;
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
@@ -77,6 +78,18 @@ public class ClassPathXmlApplicationContextTests {
 	public void testSingleConfigLocation() {
 		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(FQ_SIMPLE_CONTEXT);
 		assertThat(ctx.containsBean("someMessageSource")).isTrue();
+		BeanFactoryPostProcessor beanFactoryPostProcessor = (BeanFactoryPostProcessor) ctx.getBean("bfpp");
+		beanFactoryPostProcessor.postProcessBeanFactory(ctx.getBeanFactory());
+		System.out.println(ctx.getBean("simpleBean"));
+		ctx.close();
+	}
+
+	@Test
+	public void testBeanFactoryPostProcessor() {
+		ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(FQ_SIMPLE_CONTEXT);
+		BeanFactoryPostProcessor beanFactoryPostProcessor = (BeanFactoryPostProcessor) ctx.getBean("bfpp");
+		beanFactoryPostProcessor.postProcessBeanFactory(ctx.getBeanFactory());
+		System.out.println(ctx.getBean("simpleBean"));
 		ctx.close();
 	}
 
