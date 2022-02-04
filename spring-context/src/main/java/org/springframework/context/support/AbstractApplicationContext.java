@@ -565,15 +565,19 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				beanPostProcess.end();
 
 				// Initialize message source for this context.
+				// 初始化MessageSource,提供国际化支持，底层使用java的ResourceBundle实现按照名字读取配置文件
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
+				// 初始化事件多播器
 				initApplicationEventMulticaster();
 
 				// Initialize other special beans in specific context subclasses.
+				// 自定义操作
 				onRefresh();
 
 				// Check for listener beans and register them.
+				// 从bean工厂中获取所有ApplicationListener,并注册到多播器中
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
@@ -581,6 +585,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				// 完成刷新操作后的处理：发布响应事件
 				finishRefresh();
 			}
 
@@ -896,6 +901,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 */
 	protected void finishBeanFactoryInitialization(ConfigurableListableBeanFactory beanFactory) {
 		// Initialize conversion service for this context.
+		// 初始化conversionService，用于属性类型转换
+		// 之前的属性编辑器也支持类型转换，但只支持字符串和其他类型转换。
+		// 上面描述错误，属性编辑器有setValue(Object) 和Object getValue()方法，不是只支持字符串转换
+		// BeanWrapperImpl中首先检查是否有满足条件的PropertyEditor,之后再使用ConversionService进行属性设置。
 		if (beanFactory.containsBean(CONVERSION_SERVICE_BEAN_NAME) &&
 				beanFactory.isTypeMatch(CONVERSION_SERVICE_BEAN_NAME, ConversionService.class)) {
 			beanFactory.setConversionService(
@@ -919,9 +928,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setTempClassLoader(null);
 
 		// Allow for caching all bean definition metadata, not expecting further changes.
+		// 配置冻结, 将来不会改变
 		beanFactory.freezeConfiguration();
 
 		// Instantiate all remaining (non-lazy-init) singletons.
+		// 实例化所有非延迟加载的单例bean
 		beanFactory.preInstantiateSingletons();
 	}
 
@@ -936,10 +947,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		clearResourceCaches();
 
 		// Initialize lifecycle processor for this context.
-		// 生命周期processor
+		// 生命周期processor, ApplicationContext在启动时会调用start方法，终止时调用stop方法
 		initLifecycleProcessor();
 
 		// Propagate refresh to lifecycle processor first.
+		// 启动所有实现lifecycle接口的bean
 		getLifecycleProcessor().onRefresh();
 
 		// Publish the final event.
