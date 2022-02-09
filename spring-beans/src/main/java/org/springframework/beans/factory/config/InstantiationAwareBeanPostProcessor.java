@@ -47,6 +47,7 @@ import org.springframework.lang.Nullable;
 public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 
 	/**
+	 * 在bean实例化之前
 	 * Apply this BeanPostProcessor <i>before the target bean gets instantiated</i>.
 	 * The returned bean object may be a proxy to use instead of the target bean,
 	 * effectively suppressing default instantiation of the target bean.
@@ -76,6 +77,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	}
 
 	/**
+	 * 在bean实例化之后，属性依赖注入之前
 	 * Perform operations after the bean has been instantiated, via a constructor or factory method,
 	 * but before Spring property population (from explicit properties or autowiring) occurs.
 	 * <p>This is the ideal callback for performing custom field injection on the given bean
@@ -95,6 +97,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
 	}
 
 	/**
+	 * 在属性依赖注入之前，处理给定的属性值
 	 * Post-process the given property values before the factory applies them
 	 * to the given bean.
 	 * <p>The default implementation returns the given {@code pvs} as-is.

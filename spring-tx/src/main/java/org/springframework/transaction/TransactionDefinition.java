@@ -44,6 +44,7 @@ import org.springframework.lang.Nullable;
 public interface TransactionDefinition {
 
 	/**
+	 * 支持当前事务，没有就创建一个新的
 	 * Support a current transaction; create a new one if none exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p>This is typically the default setting of a transaction definition,
@@ -52,6 +53,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_REQUIRED = 0;
 
 	/**
+	 * 支持当前事务，没有就无事务运行
 	 * Support a current transaction; execute non-transactionally if none exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p><b>NOTE:</b> For transaction managers with transaction synchronization,
@@ -73,6 +75,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_SUPPORTS = 1;
 
 	/**
+	 * 支持当前事务，没有就报错
 	 * Support a current transaction; throw an exception if no current transaction
 	 * exists. Analogous to the EJB transaction attribute of the same name.
 	 * <p>Note that transaction synchronization within a {@code PROPAGATION_MANDATORY}
@@ -81,6 +84,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_MANDATORY = 2;
 
 	/**
+	 * 创建一个新事务，如果存在当前事务就挂起
 	 * Create a new transaction, suspending the current transaction if one exists.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p><b>NOTE:</b> Actual transaction suspension will not work out-of-the-box
@@ -96,6 +100,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_REQUIRES_NEW = 3;
 
 	/**
+	 * 不支持当前事务，总是以无事务方式运行
 	 * Do not support a current transaction; rather always execute non-transactionally.
 	 * Analogous to the EJB transaction attribute of the same name.
 	 * <p><b>NOTE:</b> Actual transaction suspension will not work out-of-the-box
@@ -111,6 +116,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_NOT_SUPPORTED = 4;
 
 	/**
+	 * 不支持当前事务，有事务就报错
 	 * Do not support a current transaction; throw an exception if a current transaction
 	 * exists. Analogous to the EJB transaction attribute of the same name.
 	 * <p>Note that transaction synchronization is <i>not</i> available within a
@@ -119,6 +125,7 @@ public interface TransactionDefinition {
 	int PROPAGATION_NEVER = 5;
 
 	/**
+	 * 嵌套事务
 	 * Execute within a nested transaction if a current transaction exists,
 	 * behave like {@link #PROPAGATION_REQUIRED} otherwise. There is no
 	 * analogous feature in EJB.
