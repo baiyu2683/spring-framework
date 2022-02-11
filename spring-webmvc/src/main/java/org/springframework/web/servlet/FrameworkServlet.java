@@ -516,6 +516,7 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 
 	/**
+	 * 实现了ApplicationContext创建
 	 * Overridden method of {@link HttpServletBean}, invoked after any bean properties
 	 * have been set. Creates this servlet's WebApplicationContext.
 	 */
@@ -659,10 +660,12 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 		wac.setEnvironment(getEnvironment());
 		wac.setParent(parent);
+		// 默认是WEB-INFO/[Servlet-name]-Servlet.xml
 		String configLocation = getContextConfigLocation();
 		if (configLocation != null) {
 			wac.setConfigLocation(configLocation);
 		}
+		// 配置并刷新
 		configureAndRefreshWebApplicationContext(wac);
 
 		return wac;
