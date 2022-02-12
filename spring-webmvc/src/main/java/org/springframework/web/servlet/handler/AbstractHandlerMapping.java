@@ -486,6 +486,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	}
 
 	/**
+	 * DispatcherServlet.properties中定义的三个HanlderMapping都继承了当前类，最后使用了此方法获取handler
 	 * Look up a handler for the given request, falling back to the default
 	 * handler if no specific one is found.
 	 * @param request current HTTP request

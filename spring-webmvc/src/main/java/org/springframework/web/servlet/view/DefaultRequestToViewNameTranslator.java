@@ -123,6 +123,7 @@ public class DefaultRequestToViewNameTranslator implements RequestToViewNameTran
 
 
 	/**
+	 * 根据根据请求获取path,然后将path翻译为对应的视图名称
 	 * Translates the request URI of the incoming {@link HttpServletRequest}
 	 * into the view name based on the configured parameters.
 	 * @throws IllegalArgumentException if neither a parsed RequestPath, nor a
