@@ -29,6 +29,7 @@ import org.springframework.validation.DataBinder;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
+ * 一个专门用来处理web请求参数的数据绑定器。
  * Special {@link DataBinder} for data binding from web request parameters
  * to JavaBean objects. Designed for web environments, but not dependent on
  * the Servlet API; serves as base class for more specific DataBinder variants,

@@ -99,6 +99,10 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.util.WebUtils;
 
 /**
+ * 对@RequestMapping注释的hanldermethod的解析调用
+ * 1. 解析参数
+ * 2. 反射调用方法
+ * 3. 封装返回值，ModelAndView
  * Extension of {@link AbstractHandlerMethodAdapter} that supports
  * {@link RequestMapping @RequestMapping} annotated {@link HandlerMethod HandlerMethods}.
  *
@@ -562,20 +566,27 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		return this.beanFactory;
 	}
 
-
+	/**
+	 * RequestMappingHandlerAdapter实现了InitializingBean接口, 在此方法中进行初始化
+	 */
 	@Override
 	public void afterPropertiesSet() {
 		// Do this first, it may add ResponseBody advice beans
+		// 查找所有的@ControllerAdvice注释的bean，然后从中解析@ModelAttribute、@InitBinder注释的方法
+		// 记录实现了RequestBodyAdvice和ResponseBodyAdvice的bean
 		initControllerAdviceCache();
 
+		// 初始化默认参数解析器
 		if (this.argumentResolvers == null) {
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultArgumentResolvers();
 			this.argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
 		}
+		// 初始化InitBinder解析器
 		if (this.initBinderArgumentResolvers == null) {
 			List<HandlerMethodArgumentResolver> resolvers = getDefaultInitBinderArgumentResolvers();
 			this.initBinderArgumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(resolvers);
 		}
+		// 初始化返回值处理器
 		if (this.returnValueHandlers == null) {
 			List<HandlerMethodReturnValueHandler> handlers = getDefaultReturnValueHandlers();
 			this.returnValueHandlers = new HandlerMethodReturnValueHandlerComposite().addHandlers(handlers);
@@ -586,7 +597,7 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		if (getApplicationContext() == null) {
 			return;
 		}
-
+		// 从所有bean中遍历获得有注解@ControllerAdvice的bean,封装为ControllerAdviceBean
 		List<ControllerAdviceBean> adviceBeans = ControllerAdviceBean.findAnnotatedBeans(getApplicationContext());
 
 		List<Object> requestResponseBodyAdviceBeans = new ArrayList<>();
@@ -596,14 +607,17 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 			if (beanType == null) {
 				throw new IllegalStateException("Unresolvable type for ControllerAdviceBean: " + adviceBean);
 			}
+			// 查找有@ModelAttribute的方法
 			Set<Method> attrMethods = MethodIntrospector.selectMethods(beanType, MODEL_ATTRIBUTE_METHODS);
 			if (!attrMethods.isEmpty()) {
 				this.modelAttributeAdviceCache.put(adviceBean, attrMethods);
 			}
+			//查找有@InitBinder的方法
 			Set<Method> binderMethods = MethodIntrospector.selectMethods(beanType, INIT_BINDER_METHODS);
 			if (!binderMethods.isEmpty()) {
 				this.initBinderAdviceCache.put(adviceBean, binderMethods);
 			}
+			// 记录实现了RequestBodyAdvice和ResponseBodyAdvice接口的bean
 			if (RequestBodyAdvice.class.isAssignableFrom(beanType) || ResponseBodyAdvice.class.isAssignableFrom(beanType)) {
 				requestResponseBodyAdviceBeans.add(adviceBean);
 			}
@@ -782,11 +796,13 @@ public class RequestMappingHandlerAdapter extends AbstractHandlerMethodAdapter
 		return true;
 	}
 
+	// 处理入口
 	@Override
 	protected ModelAndView handleInternal(HttpServletRequest request,
 			HttpServletResponse response, HandlerMethod handlerMethod) throws Exception {
 
 		ModelAndView mav;
+		// 检查允许的请求方法
 		checkRequest(request);
 
 		// Execute invokeHandlerMethod in synchronized block if required.

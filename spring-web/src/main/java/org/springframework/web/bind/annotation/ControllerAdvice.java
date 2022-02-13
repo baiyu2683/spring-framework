@@ -27,6 +27,8 @@ import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 
 /**
+ * 定义多个@Controller共享的@ExceptionHanlder、@InitBinder和@ModelAttribute
+ *
  * Specialization of {@link Component @Component} for classes that declare
  * {@link ExceptionHandler @ExceptionHandler}, {@link InitBinder @InitBinder}, or
  * {@link ModelAttribute @ModelAttribute} methods to be shared across
@@ -55,6 +57,8 @@ import org.springframework.stereotype.Component;
  * advice will still be preferred over any match (whether root or cause level)
  * on a lower-priority advice bean. As a consequence, please declare your primary
  * root exception mappings on a prioritized advice bean with a corresponding order.
+ *
+ * 默认@ControllerAdvice是对所有Controller生效的，可以指定注解、包、类、类型限定范围
  *
  * <p>By default, the methods in an {@code @ControllerAdvice} apply globally to
  * all controllers. Use selectors such as {@link #annotations},

@@ -51,6 +51,8 @@ import org.springframework.util.PatternMatchUtils;
 import org.springframework.util.StringUtils;
 
 /**
+ * 数据绑定器，用于将属性值设置到目标对象上
+ *
  * Binder that allows for setting property values onto a target object,
  * including support for validation and binding result analysis.
  * The binding process can be customized through specifying allowed fields,

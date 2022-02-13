@@ -21,6 +21,8 @@ import java.util.Locale;
 import org.springframework.lang.Nullable;
 
 /**
+ * 视图解析接口
+ * 作用是根据视图名称和Locale解析出视图
  * Interface to be implemented by objects that can resolve views by name.
  *
  * <p>View state doesn't change during the running of the application,
