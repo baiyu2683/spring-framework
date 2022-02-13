@@ -526,7 +526,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		else if (logger.isDebugEnabled() && !DispatcherType.ASYNC.equals(request.getDispatcherType())) {
 			logger.debug("Mapped to " + executionChain.getHandler());
 		}
-
+		// 跨域请求处理，预检请求
 		if (hasCorsConfigurationSource(handler) || CorsUtils.isPreFlightRequest(request)) {
 			CorsConfiguration config = getCorsConfiguration(handler, request);
 			if (getCorsConfigurationSource() != null) {
@@ -672,6 +672,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			return new HandlerExecutionChain(new PreFlightHandler(config), interceptors);
 		}
 		else {
+			// 将CorsInterceptor放在所有拦截器最前面
 			chain.addInterceptor(0, new CorsInterceptor(config));
 			return chain;
 		}
