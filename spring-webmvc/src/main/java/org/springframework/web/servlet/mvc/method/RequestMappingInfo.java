@@ -47,6 +47,7 @@ import org.springframework.web.util.pattern.PathPattern;
 import org.springframework.web.util.pattern.PathPatternParser;
 
 /**
+ * 请求映射信息，封装了所有可能的请求匹配条件，也就是@RequestMapping中配置的路径、请求类型、参数、请求头、内容类型、返回类型等
  * Request mapping information. A composite for the following conditions:
  * <ol>
  * <li>{@link PathPatternsRequestCondition} with parsed {@code PathPatterns} or

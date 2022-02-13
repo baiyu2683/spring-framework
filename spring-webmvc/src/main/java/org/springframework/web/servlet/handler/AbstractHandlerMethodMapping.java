@@ -52,6 +52,7 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.pattern.PathPatternParser;
 
 /**
+ * HandlerMethod作为handler的实现，是最常用的一个Handler实现，比如@RequestMapping注释的方法
  * Abstract base class for {@link HandlerMapping} implementations that define
  * a mapping between a request and a {@link HandlerMethod}.
  *
@@ -205,6 +206,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	// Handler method detection
 
 	/**
+	 * 初始化handlermethod
 	 * Detects handler methods at initialization.
 	 * @see #initHandlerMethods
 	 */
@@ -294,6 +296,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			else if (mappingsLogger.isDebugEnabled()) {
 				mappingsLogger.debug(formatMappings(userType, methods));
 			}
+			// 注册所有的HandlerMethod,并且解析CrossOrigin注解
 			methods.forEach((method, mapping) -> {
 				Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
 				registerHandlerMethod(handler, invocableMethod, mapping);

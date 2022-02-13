@@ -370,6 +370,8 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 
 
 	/**
+	 * 父接口实现了ApplicationContextAware, 在setApplicationContext方法中调用了此方法。
+	 * 初始化interceptor
 	 * Initializes the interceptors.
 	 * @see #extendInterceptors(java.util.List)
 	 * @see #initInterceptors()
@@ -496,14 +498,17 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	@Override
 	@Nullable
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+		// 子类实现获取hanlder的方法, 子类主要做的工作
 		Object handler = getHandlerInternal(request);
 		if (handler == null) {
+			// 获取默认的handler, 子类也可以设置
 			handler = getDefaultHandler();
 		}
 		if (handler == null) {
 			return null;
 		}
 		// Bean name or resolved handler?
+		// 如果获取到的handler是个字符串类型，则从上下文中获取对应的bean
 		if (handler instanceof String handlerName) {
 			handler = obtainApplicationContext().getBean(handlerName);
 		}
@@ -512,7 +517,7 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 		if (!ServletRequestPathUtils.hasCachedPath(request)) {
 			initLookupPath(request);
 		}
-
+		// 获取HandlerExecutionChain
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
 
 		if (logger.isTraceEnabled()) {
