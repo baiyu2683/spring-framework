@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.Nullable;
 
 /**
+ * 管理FlashMap实例
+ *
  * A strategy interface for retrieving and saving FlashMap instances.
  * See {@link FlashMap} for a general overview of flash attributes.
  *
