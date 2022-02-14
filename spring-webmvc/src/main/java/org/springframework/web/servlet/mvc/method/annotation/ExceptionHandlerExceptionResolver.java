@@ -394,15 +394,16 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 	@Nullable
 	protected ModelAndView doResolveHandlerMethodException(HttpServletRequest request,
 			HttpServletResponse response, @Nullable HandlerMethod handlerMethod, Exception exception) {
-
+		// 查找能够处理的Exceptionhandler
 		ServletInvocableHandlerMethod exceptionHandlerMethod = getExceptionHandlerMethod(handlerMethod, exception);
 		if (exceptionHandlerMethod == null) {
 			return null;
 		}
-
+		// 设置参数解析器
 		if (this.argumentResolvers != null) {
 			exceptionHandlerMethod.setHandlerMethodArgumentResolvers(this.argumentResolvers);
 		}
+		// 返回值处理器
 		if (this.returnValueHandlers != null) {
 			exceptionHandlerMethod.setHandlerMethodReturnValueHandlers(this.returnValueHandlers);
 		}
@@ -457,6 +458,8 @@ public class ExceptionHandlerExceptionResolver extends AbstractHandlerMethodExce
 	}
 
 	/**
+	 * 查找@ExceptionHandler, 首先从当前controller查找，没有的话再从ControllerAdvice中查找
+	 *
 	 * Find an {@code @ExceptionHandler} method for the given exception. The default
 	 * implementation searches methods in the class hierarchy of the controller first
 	 * and if not found, it continues searching for additional {@code @ExceptionHandler}

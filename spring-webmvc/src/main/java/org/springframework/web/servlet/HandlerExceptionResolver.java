@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.lang.Nullable;
 
 /**
+ * 在视图渲染前出现异常时，进行异常处理
+ *
  * Interface to be implemented by objects that can resolve exceptions thrown during
  * handler mapping or execution, in the typical case to error views. Implementors are
  * typically registered as beans in the application context.
