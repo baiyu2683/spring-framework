@@ -20,6 +20,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
+ * jsp视图解析器
+ *
  * Convenient subclass of {@link UrlBasedViewResolver} that supports
  * {@link InternalResourceView} (i.e. Servlets and JSPs) and subclasses
  * such as {@link JstlView}.

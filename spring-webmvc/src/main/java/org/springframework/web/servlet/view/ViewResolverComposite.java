@@ -35,6 +35,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 /**
+ * 根据配置的ViewResolver,逐个解析视图，第一个能解析出来的返回
+ *
  * A {@link org.springframework.web.servlet.ViewResolver} that delegates to others.
  *
  * @author Sebastien Deleuze

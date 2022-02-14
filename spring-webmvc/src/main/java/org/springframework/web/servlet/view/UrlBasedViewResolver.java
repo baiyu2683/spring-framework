@@ -453,6 +453,7 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	}
 
 	/**
+	 * 重写了默认的createView逻辑，处理redirect,forward
 	 * Overridden to implement check for "redirect:" prefix.
 	 * <p>Not possible in {@code loadView}, since overridden
 	 * {@code loadView} versions in subclasses might rely on the
@@ -530,6 +531,8 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	}
 
 	/**
+	 * 实现视图加载逻辑
+	 *
 	 * Delegates to {@code buildView} for creating a new instance of the
 	 * specified view class. Applies the following Spring lifecycle methods
 	 * (as supported by the generic Spring bean factory):
@@ -546,7 +549,9 @@ public class UrlBasedViewResolver extends AbstractCachingViewResolver implements
 	 */
 	@Override
 	protected View loadView(String viewName, Locale locale) throws Exception {
+		// 根据配置的viewclass,反射调用构造函数创建实例，然后初始化各种参数
 		AbstractUrlBasedView view = buildView(viewName);
+		// 调用初始化，生命周期函数
 		View result = applyLifecycleMethods(viewName, view);
 		return (view.checkResource(locale) ? result : null);
 	}

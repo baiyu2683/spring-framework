@@ -20,6 +20,8 @@ import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 
 /**
+ * 解析freemarker模板
+ *
  * Convenience subclass of {@link org.springframework.web.servlet.view.UrlBasedViewResolver}
  * that supports {@link FreeMarkerView} (i.e. FreeMarker templates) and custom subclasses of it.
  *

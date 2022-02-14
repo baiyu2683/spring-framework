@@ -53,6 +53,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 /**
+ * 根据请求头中Accept传递的MediaType进行视图解析
+ *
  * Implementation of {@link ViewResolver} that resolves a view based on the request file name
  * or {@code Accept} header.
  *
@@ -181,6 +183,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 	}
 
 
+	// 获取所有的ViewResolver
 	@Override
 	protected void initServletContext(ServletContext servletContext) {
 		Collection<ViewResolver> matchingBeans =
@@ -224,9 +227,12 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 	public View resolveViewName(String viewName, Locale locale) throws Exception {
 		RequestAttributes attrs = RequestContextHolder.getRequestAttributes();
 		Assert.state(attrs instanceof ServletRequestAttributes, "No current ServletRequestAttributes");
+		//
 		List<MediaType> requestedMediaTypes = getMediaTypes(((ServletRequestAttributes) attrs).getRequest());
 		if (requestedMediaTypes != null) {
+			// 使用所有ViewResolver逐个解析视图
 			List<View> candidateViews = getCandidateViews(viewName, locale, requestedMediaTypes);
+			// 根据mediaType找到最适合的视图
 			View bestView = getBestView(candidateViews, requestedMediaTypes, attrs);
 			if (bestView != null) {
 				return bestView;
@@ -240,10 +246,12 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 			if (logger.isDebugEnabled()) {
 				logger.debug("Using 406 NOT_ACCEPTABLE" + mediaTypeInfo);
 			}
+			// 返回默认not_accept视图
 			return NOT_ACCEPTABLE_VIEW;
 		}
 		else {
 			logger.debug("View remains unresolved" + mediaTypeInfo);
+			// 没有解析出视图
 			return null;
 		}
 	}
@@ -317,6 +325,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 				if (view != null) {
 					candidateViews.add(view);
 				}
+				// 根据后缀名解析
 				for (MediaType requestedMediaType : requestedMediaTypes) {
 					List<String> extensions = this.contentNegotiationManager.resolveFileExtensions(requestedMediaType);
 					for (String extension : extensions) {
@@ -338,6 +347,7 @@ public class ContentNegotiatingViewResolver extends WebApplicationObjectSupport
 	@Nullable
 	private View getBestView(List<View> candidateViews, List<MediaType> requestedMediaTypes, RequestAttributes attrs) {
 		for (View candidateView : candidateViews) {
+			//是重定向，直接返回
 			if (candidateView instanceof SmartView smartView) {
 				if (smartView.isRedirectView()) {
 					return candidateView;

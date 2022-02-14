@@ -27,6 +27,8 @@ import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
 /**
+ * 将viewName认为是beanName来查找ViewResolver
+ *
  * A simple implementation of {@link org.springframework.web.servlet.ViewResolver}
  * that interprets a view name as a bean name in the current application context,
  * i.e. typically in the XML file of the executing {@code DispatcherServlet}
