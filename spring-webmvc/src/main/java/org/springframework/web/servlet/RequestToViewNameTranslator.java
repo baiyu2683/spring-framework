@@ -21,6 +21,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.lang.Nullable;
 
 /**
+ * 根据request解析视图名称
+ *
  * Strategy interface for translating an incoming
  * {@link jakarta.servlet.http.HttpServletRequest} into a
  * logical view name when no view name is explicitly supplied.
