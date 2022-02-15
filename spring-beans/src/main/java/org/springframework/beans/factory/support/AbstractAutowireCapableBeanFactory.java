@@ -580,6 +580,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 			if (!mbd.postProcessed) {
 				try {
 					// 应用MergedBeanDefinitionPostProcessor
+					// AutowiredAnnotationBeanPostProcessor在这里封装了@Autowired和@Value注解信息
 					// 处理@Autowired 和 @Value注解，封装为AutowiredFieldElement、AutowirteMethodElement
 					applyMergedBeanDefinitionPostProcessors(mbd, beanType, beanName);
 				}

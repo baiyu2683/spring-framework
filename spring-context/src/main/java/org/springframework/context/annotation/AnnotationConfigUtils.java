@@ -160,13 +160,13 @@ public abstract class AnnotationConfigUtils {
 		}
 
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
-
+		// 注册ConfigurationClassPostProcessor, 用于bean定义扫描注册
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
 		}
-
+		// 注册AutowiredAnnotationBeanPostProcessor，用于@Autowire和@Value注解处理
 		if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
 			def.setSource(source);
@@ -174,6 +174,7 @@ public abstract class AnnotationConfigUtils {
 		}
 
 		// Check for Jakarta Annotations support, and if present add the CommonAnnotationBeanPostProcessor.
+		// @Resource注解处理
 		if (jakartaAnnotationsPresent && !registry.containsBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			RootBeanDefinition def = new RootBeanDefinition(CommonAnnotationBeanPostProcessor.class);
 			def.setSource(source);
@@ -182,6 +183,7 @@ public abstract class AnnotationConfigUtils {
 
 		// Check for JSR-250 support, and if present add an InitDestroyAnnotationBeanPostProcessor
 		// for the javax variant of PostConstruct/PreDestroy.
+		// 处理@PostConstruct注解
 		if (jsr250Present && !registry.containsBeanDefinition(JSR250_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			try {
 				RootBeanDefinition def = new RootBeanDefinition(InitDestroyAnnotationBeanPostProcessor.class);

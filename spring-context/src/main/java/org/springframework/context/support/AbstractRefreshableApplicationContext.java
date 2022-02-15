@@ -130,6 +130,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 			beanFactory.setSerializationId(getId());
 			// 定制beanFactory, 设置相关属性，包括是否允许覆盖同名称的不同定义的对象以及循环依赖
 			customizeBeanFactory(beanFactory);
+			// 默认是在这里加载beandefinition, springboot是通过一个BeanDefinitionRegistryPostProcessor注册的。
 			loadBeanDefinitions(beanFactory);
 			this.beanFactory = beanFactory;
 		}

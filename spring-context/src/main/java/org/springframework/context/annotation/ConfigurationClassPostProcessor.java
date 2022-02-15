@@ -70,6 +70,8 @@ import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
+ * 解析@Configuration注解类
+ *
  * {@link BeanFactoryPostProcessor} used for bootstrapping processing of
  * {@link Configuration @Configuration} classes.
  *
@@ -243,7 +245,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-
+		// 调用BeanDefinitionRegistry
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -276,7 +278,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
 		String[] candidateNames = registry.getBeanDefinitionNames();
-
+		// 找到有@Configuration类，此时还只有启动类有，就找到了启动类
 		for (String beanName : candidateNames) {
 			BeanDefinition beanDef = registry.getBeanDefinition(beanName);
 			if (beanDef.getAttribute(ConfigurationClassUtils.CONFIGURATION_CLASS_ATTRIBUTE) != null) {
@@ -328,6 +330,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
 			StartupStep processConfig = this.applicationStartup.start("spring.context.config-classes.parse");
+			// 开始解析
 			parser.parse(candidates);
 			parser.validate();
 

@@ -29,6 +29,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * jar程序 上下文
+ *
  * Standalone application context, accepting <em>component classes</em> as input &mdash;
  * in particular {@link Configuration @Configuration}-annotated classes, but also plain
  * {@link org.springframework.stereotype.Component @Component} types and JSR-330 compliant
@@ -66,8 +68,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext() {
 		StartupStep createAnnotatedBeanDefReader = this.getApplicationStartup().start("spring.context.annotated-bean-reader.create");
+		// 初始化reader
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		createAnnotatedBeanDefReader.end();
+		// 初始化扫描器
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 

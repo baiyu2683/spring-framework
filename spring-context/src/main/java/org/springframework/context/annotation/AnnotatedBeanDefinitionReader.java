@@ -34,6 +34,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
+ * 和ClassPathBeanDefinitionScanner差不多，但是此类可以明确的注册一个类
+ *
  * Convenient adapter for programmatic registration of bean classes.
  *
  * <p>This is an alternative to {@link ClassPathBeanDefinitionScanner}, applying
@@ -85,6 +87,9 @@ public class AnnotatedBeanDefinitionReader {
 		Assert.notNull(environment, "Environment must not be null");
 		this.registry = registry;
 		this.conditionEvaluator = new ConditionEvaluator(registry, environment, null);
+		// 注册用于bean注册的BeanFactoryProcessor和一些BeanProcessor
+		// BeanFactoryProcesosor主要是ConfigurationClassPostProcessor
+		// BeanPostProcessor主要是@Autowire、@Value、@Resource等注解处理processor
 		AnnotationConfigUtils.registerAnnotationConfigProcessors(this.registry);
 	}
 
