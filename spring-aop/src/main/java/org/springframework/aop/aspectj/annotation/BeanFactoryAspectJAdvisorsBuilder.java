@@ -91,6 +91,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 					List<Advisor> advisors = new ArrayList<>();
 					aspectNames = new ArrayList<>();
 					// all bean name
+					// 获取所有的bean, 逐个检查是否符合
 					String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
 							this.beanFactory, Object.class, true, false);
 					for (String beanName : beanNames) {
